@@ -1,7 +1,7 @@
 // Utilities - Starter Code (WITH ERRORS AND MISSING FEATURES)
 
 // Bug: Not using proper data structures
-var priorities = ["low", "medium", "high"];
+const priorities = ["low", "medium", "high"];
 
 // Bug: Missing JSON operations
 function saveToStorage(data) {
@@ -16,8 +16,13 @@ function loadFromStorage() {
 }
 
 // Bug: Incorrect Math object usage
+// function generateRandomId() {
+//   return Math.floor(Math.random() * 10000); // FIXED - Bug: Returns decimal, not integer
+// }
+// Better way for edge cases where app gets bigger than the fixed amount or getting the same random number twice
+
 function generateRandomId() {
-  return Math.random(); // Bug: Returns decimal, not integer
+  return Date.now();
 }
 
 // Bug: Poor string manipulation

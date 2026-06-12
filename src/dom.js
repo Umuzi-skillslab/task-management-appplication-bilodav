@@ -9,13 +9,24 @@ function setupEventListeners() {
   // Corrected selector method
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
   const taskInput = document.querySelector("#task-input"); // Added # ************************* DOES NOT EXIT IN DOM
+  const prioritySelect = document.getElementById("priority");
 
   // Added null checks before adding listeners
 
-  if (!addButton) {
+  if (!addButton || !prioritySelect) {
     console.log("missing button");
     return;
   }
+
+  // Adding the options dynamically using the single source of truth [priorities] located in utilis.js
+  priorities.forEach((priority) => {
+    prioritySelect.insertAdjacentHTML(
+      "beforeend",
+      `
+      <option value=${priority}>${priority.charAt(0).toUpperCase() + priority.slice(1)}</option>
+      `,
+    );
+  });
 
   addButton.addEventListener("click", handleAddTask);
 
@@ -28,14 +39,14 @@ function handleAddTask() {
 
   const titleInput = document.getElementById("title");
   const descInput = document.getElementById("description");
-  const priorityInput = document.getElementById("priority");
+  const prioritySelect = document.getElementById("priority");
 
   // No validation
   // Should use event.preventDefault() if form *********************************************
 
   const title = titleInput.value;
   const description = descInput.value;
-  const priority = priorityInput.value;
+  const priority = prioritySelect.value;
   // Added priority input
 
   addTask(title, description, priority);
@@ -45,6 +56,7 @@ function handleAddTask() {
 
   titleInput.value = "";
   descInput.value = "";
+  prioritySelect.value = "low";
 }
 
 // Function that should use better selectors
@@ -69,12 +81,12 @@ function displayTasks() {
       "beforeend",
       `
       <div>
-        <p>ID: </p>
+        <p>ID: ${taskList[i].id} </p>
         <h3> ${taskList[i].title}</h3>
         <p> ${taskList[i].description}</p>
-        <p> Priority: ${taskList[i].priority}</p>
+        <p> Priority: ${taskList[i].priority.charAt(0).toUpperCase() + taskList[i].priority.slice(1)}</p>
         <p> Status: ${taskList[i].completed ? "Done" : "Still Busy"}</p>
-        <button>${taskList[i].completed ? "Mark as Done" : "Mark as not done"}</button>
+        <button>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button>
         <button>Delete</button>
 
 
