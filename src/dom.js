@@ -8,18 +8,18 @@ function setupEventListeners() {
 
   // Corrected selector method
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
-  const taskInput = document.querySelector("#task-input"); // Added #
+  const taskInput = document.querySelector("#task-input"); // Added # ************************* DOES NOT EXIT IN DOM
 
-  // Missing: null checks before adding listeners
+  // Added null checks before adding listeners
 
-  if (!addButton || !taskInput) {
+  if (!addButton) {
     console.log("missing button");
     return;
   }
 
   addButton.addEventListener("click", handleAddTask);
 
-  // Missing: other event listeners for form submission, etc. **************************************
+  // Missing: other event listeners for form submission, etc. ************************************** DOES this form need to be here
 }
 
 // Function with DOM manipulation errors
@@ -28,19 +28,23 @@ function handleAddTask() {
 
   const titleInput = document.getElementById("title");
   const descInput = document.getElementById("description");
+  const priorityInput = document.getElementById("priority");
 
   // No validation
   // Should use event.preventDefault() if form *********************************************
 
   const title = titleInput.value;
   const description = descInput.value;
+  const priority = priorityInput.value;
+  // Added priority input
 
-  // Missing: priority input
-
-  addTask(title, description, 1);
+  addTask(title, description, priority);
   displayTasks();
 
-  // Missing: clear inputs after adding
+  // Added clearing inputs after adding values
+
+  titleInput.value = "";
+  descInput.value = "";
 }
 
 // Function that should use better selectors
@@ -65,8 +69,15 @@ function displayTasks() {
       "beforeend",
       `
       <div>
+        <p>ID: </p>
         <h3> ${taskList[i].title}</h3>
         <p> ${taskList[i].description}</p>
+        <p> Priority: ${taskList[i].priority}</p>
+        <p> Status: ${taskList[i].completed ? "Done" : "Still Busy"}</p>
+        <button>${taskList[i].completed ? "Mark as Done" : "Mark as not done"}</button>
+        <button>Delete</button>
+
+
       </div>
       `,
     );

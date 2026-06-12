@@ -15,7 +15,12 @@
         <!-- Form with issues -->
         <input type="text" id="title" placeholder="Task Title" />
         <input type="text" id="description" placeholder="Description" />
-        <!-- Missing: priority input -->
+        <select id="priority">
+          <option default value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
         <button class="add-task-btn">Add Task</button>
       </div>
 

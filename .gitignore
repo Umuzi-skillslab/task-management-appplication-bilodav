@@ -24,3 +24,5 @@ npm-debug.log*
 dist/
 build/
  
+#  Questions
+questions.txt
