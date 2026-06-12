@@ -1,33 +1,39 @@
-import { addTask } from "./app.js";
+import { taskList, addTask } from "./app.js";
 
 // DOM Manipulation - Starter Code with Errors
 
-// Missing: proper DOM selectors
+// Added the proper DOM selectors
 function setupEventListeners() {
   console.log("LOADED THE DOM");
 
-  // Wrong selector method
+  // Corrected selector method
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
   const taskInput = document.querySelector("#task-input"); // Added #
 
   // Missing: null checks before adding listeners
+
+  if (!addButton || !taskInput) {
+    console.log("missing button");
+    return;
+  }
+
   addButton.addEventListener("click", handleAddTask);
 
-  // Missing: other event listeners for form submission, etc.
+  // Missing: other event listeners for form submission, etc. **************************************
 }
 
 // Function with DOM manipulation errors
 function handleAddTask() {
   console.log("I Clicked Add Task");
 
-  var titleInput = document.getElementById("title");
-  var descInput = document.getElementById("description");
+  const titleInput = document.getElementById("title");
+  const descInput = document.getElementById("description");
 
   // No validation
-  // Should use event.preventDefault() if form
+  // Should use event.preventDefault() if form *********************************************
 
-  var title = titleInput.value;
-  var description = descInput.value;
+  const title = titleInput.value;
+  const description = descInput.value;
 
   // Missing: priority input
 
@@ -39,17 +45,31 @@ function handleAddTask() {
 
 // Function that should use better selectors
 function displayTasks() {
-  var container = document.getElementById("task-list");
+  const container = document.getElementById("task-list");
 
-  // Should clear existing content first
-  // Missing: null check
+  // Added null check
+  if (!container) return;
 
-  // Inefficient - should use template literals and insertAdjacentHTML
-  for (var i = 0; i < taskList.length; i++) {
-    var div = document.createElement("div");
-    div.innerHTML = "<h3>" + taskList[i].title + "</h3>";
-    div.innerHTML = div.innerHTML + "<p>" + taskList[i].description + "</p>";
-    container.appendChild(div);
+  // Clearing existing content first
+
+  container.innerHTML = ``;
+
+  // Inefficient - should use template literals and insertAdjacentHTML ***********MAybe Gonna use a foreach here?
+  for (let i = 0; i < taskList.length; i++) {
+    // const div = document.createElement("div");
+    // div.innerHTML = `<h3> ${taskList[i].title} </h3>`;
+    // div.innerHTML = div.innerHTML + "<p>" + taskList[i].description + "</p>";
+    // container.appendChild(div);
+
+    container.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div>
+        <h3> ${taskList[i].title}</h3>
+        <p> ${taskList[i].description}</p>
+      </div>
+      `,
+    );
 
     // Missing: task ID, completion status, event handlers for delete/complete
   }

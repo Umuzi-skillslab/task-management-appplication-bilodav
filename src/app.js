@@ -1,7 +1,7 @@
 // Task Management Application - Starter Code with Errors
 
 // Global variables
-const taskList = []; // Added Let
+export const taskList = []; // Added const as it will always be an array
 let taskCounter = 0; // Used let
 
 // Task class with errors
@@ -39,7 +39,9 @@ export function addTask(title, description, priority) {
 
   taskCounter++;
   console.log("New Task Added");
-  console.log(`Arr is ${taskList}`);
+  console.log(taskCounter);
+
+  console.log(taskList);
 
   return newTask;
 }
