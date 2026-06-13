@@ -153,11 +153,20 @@ function getHighPriorityTasks(minPriority) {
 }
 
 // Object with missing methods
-var TaskManager = {
+export const TaskManager = {
   tasks: taskList,
 
   // Missing: method to add task using functional approach
   // Missing: method using array methods (map, filter, reduce)
+
+  removeTask(taskId) {
+    // First I find where the Index of the taskList item that matches the current passed in btn's ID then save to a variable
+    const taskIndex = this.tasks.findIndex(
+      (task) => task.id === Number(taskId),
+    );
+    // Delete the index from the array using the splice method to mutate the original array
+    this.tasks.splice(taskIndex, 1);
+  },
 
   getTotalTasks: function () {
     return this.tasks.length;

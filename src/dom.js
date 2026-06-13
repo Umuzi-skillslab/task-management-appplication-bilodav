@@ -1,4 +1,4 @@
-import { taskList, addTask } from "./app.js";
+import { taskList, addTask, TaskManager } from "./app.js";
 
 // DOM Manipulation - Starter Code with Errors
 
@@ -87,29 +87,36 @@ function displayTasks() {
         <p> Priority: ${formatTaskName(taskList[i].priority)}</p>
         <p> Status: ${taskList[i].completed ? "Done" : "Still Busy"}</p>
         <button class="completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
-        <button>Delete</button>
+        <button class="deleted-btn" data-id=${taskList[i].id}>Delete</button>
 
 
       </div>
       `,
       //using datasets just incase I need an ID on the div later for deletion and finding the task ** Come Back to clean UP LOGIC **
     );
-
-    // Missing: task ID, completion status, event handlers for delete/complete
-
-    const completedButtons = document.querySelectorAll(".completed-btn");
-
-    completedButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        // First I find where the taskList item matches the current btn's ID then save to a variable
-        const task = taskList.find(
-          (task) => task.id === Number(btn.dataset.id), // converting to Number because HTML only saves strings
-        );
-        task.setCompleted(); // class handles the logic here of setting the completion status
-        displayTasks(); // re-render my screen
-      });
-    });
   }
+  // Missing: task ID, completion status, event handlers for delete/complete
+
+  const completedButtons = document.querySelectorAll(".completed-btn");
+  const deletedButtons = document.querySelectorAll(".deleted-btn");
+
+  completedButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // First I find where the taskList item matches the current btn's ID then save to a variable
+      const task = taskList.find(
+        (task) => task.id === Number(btn.dataset.id), // converting to Number because HTML only saves strings
+      );
+      task.setCompleted(); // class handles the logic here of setting the completion status
+      displayTasks(); // re-render my screen
+    });
+  });
+
+  deletedButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      TaskManager.removeTask(btn.dataset.id);
+      displayTasks(); //re-render my screen
+    });
+  });
 }
 
 // Function with event handling issues
