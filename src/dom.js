@@ -23,7 +23,7 @@ function setupEventListeners() {
     prioritySelect.insertAdjacentHTML(
       "beforeend",
       `
-      <option value=${priority}>${priority.charAt(0).toUpperCase() + priority.slice(1)}</option>
+      <option value=${priority}>${formatTaskName(priority)}</option>
       `,
     );
   });
@@ -84,17 +84,31 @@ function displayTasks() {
         <p>ID: ${taskList[i].id} </p>
         <h3> ${taskList[i].title}</h3>
         <p> ${taskList[i].description}</p>
-        <p> Priority: ${taskList[i].priority.charAt(0).toUpperCase() + taskList[i].priority.slice(1)}</p>
+        <p> Priority: ${formatTaskName(taskList[i].priority)}</p>
         <p> Status: ${taskList[i].completed ? "Done" : "Still Busy"}</p>
-        <button>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button>
+        <button class="completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
         <button>Delete</button>
 
 
       </div>
       `,
+      //using datasets just incase I need an ID on the div later for deletion and finding the task ** Come Back to clean UP LOGIC **
     );
 
     // Missing: task ID, completion status, event handlers for delete/complete
+
+    const completedButtons = document.querySelectorAll(".completed-btn");
+
+    completedButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // First I find where the taskList item matches the current btn's ID then save to a variable
+        const task = taskList.find(
+          (task) => task.id === Number(btn.dataset.id), // converting to Number because HTML only saves strings
+        );
+        task.setCompleted(); // class handles the logic here of setting the completion status
+        displayTasks(); // re-render my screen
+      });
+    });
   }
 }
 

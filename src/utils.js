@@ -27,9 +27,9 @@ function generateRandomId() {
 
 // Bug: Poor string manipulation
 function formatTaskName(name) {
-  // Bug: Not using string methods properly
-  var result = name;
-  return result; // Should capitalize, trim, etc.
+  // Fixed Bug: string methods used properly
+  const result = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
+  return result; // Now Capitalizes, trim, etc.
 }
 
 // Bug: Incorrect boolean logic

@@ -14,11 +14,14 @@ class Task {
     this.id = generateRandomId();
   }
 
-  // Missing: method to toggle completion
-
   getInfo() {
     // return now using template literals
     return `Task: ${this.title} - Priority:  ${this.priority}`;
+  }
+
+  // Added method to toggle completion
+  setCompleted() {
+    this.completed = !this.completed;
   }
 }
 
