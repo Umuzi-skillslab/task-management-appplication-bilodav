@@ -36,18 +36,20 @@ class SubTask extends Task {
 // Functions with errors
 
 // Function with no error handling
-export function addTask(title, description, priority) {
-  const newTask = new Task(title, description, priority); // changed to const
-  taskList.push(newTask);
+// export function addTask(title, description, priority) {
+//   const newTask = new Task(title, description, priority); // changed to const
+//   taskList.push(newTask);
 
-  taskCounter++;
-  console.log("New Task Added");
-  console.log(taskCounter);
+//   taskCounter++;
+//   console.log("New Task Added");
+//   console.log(taskCounter);
 
-  console.log(taskList);
+//   console.log(taskList);
 
-  return newTask;
-}
+//   return newTask;
+// }
+
+// Added the function to TaskMAnger as central place to manage the tasks
 
 // Function with incorrect loop
 function displayAllTasks() {
@@ -159,6 +161,15 @@ export const TaskManager = {
   // Missing: method to add task using functional approach
   // Missing: method using array methods (map, filter, reduce)
 
+  addTask(title, description, priority) {
+    const newTask = new Task(title, description, priority); // changed to const
+    this.tasks.push(newTask);
+    taskCounter++;
+    console.log(taskCounter);
+
+    return newTask;
+  },
+
   removeTask(taskId) {
     // First I find where the Index of the taskList item that matches the current passed in btn's ID then save to a variable
     const taskIndex = this.tasks.findIndex(
@@ -166,6 +177,8 @@ export const TaskManager = {
     );
     // Delete the index from the array using the splice method to mutate the original array
     this.tasks.splice(taskIndex, 1);
+    taskCounter--;
+    console.log(taskCounter);
   },
 
   getTotalTasks: function () {

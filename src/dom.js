@@ -1,4 +1,4 @@
-import { taskList, addTask, TaskManager } from "./app.js";
+import { taskList, TaskManager } from "./app.js";
 
 // DOM Manipulation - Starter Code with Errors
 
@@ -10,6 +10,7 @@ function setupEventListeners() {
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
   const taskInput = document.querySelector("#task-input"); // Added # ************************* DOES NOT EXIT IN DOM
   const prioritySelect = document.getElementById("priority");
+  const taskListContainer = document.getElementById("task-list");
 
   // Added null checks before adding listeners
 
@@ -29,6 +30,7 @@ function setupEventListeners() {
   });
 
   addButton.addEventListener("click", handleAddTask);
+  taskListContainer.addEventListener("click", handleTaskClick);
 
   // Missing: other event listeners for form submission, etc. ************************************** DOES this form need to be here
 }
@@ -49,7 +51,7 @@ function handleAddTask() {
   const priority = prioritySelect.value;
   // Added priority input
 
-  addTask(title, description, priority);
+  TaskManager.addTask(title, description, priority);
   displayTasks();
 
   // Added clearing inputs after adding values
@@ -92,45 +94,61 @@ function displayTasks() {
 
       </div>
       `,
-      //using datasets just incase I need an ID on the div later for deletion and finding the task ** Come Back to clean UP LOGIC **
     );
   }
   // Missing: task ID, completion status, event handlers for delete/complete
 
-  const completedButtons = document.querySelectorAll(".completed-btn");
-  const deletedButtons = document.querySelectorAll(".deleted-btn");
+  // const completedButtons = document.querySelectorAll(".completed-btn");
+  // const deletedButtons = document.querySelectorAll(".deleted-btn");
 
-  completedButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      // First I find where the taskList item matches the current btn's ID then save to a variable
-      const task = taskList.find(
-        (task) => task.id === Number(btn.dataset.id), // converting to Number because HTML only saves strings
-      );
-      task.setCompleted(); // class handles the logic here of setting the completion status
-      displayTasks(); // re-render my screen
-    });
-  });
+  // completedButtons.forEach((btn) => {
+  //   btn.addEventListener("click", () => {
+  //     // First I find where the taskList item matches the current btn's ID then save to a variable
+  //     const task = taskList.find(
+  //       (task) => task.id === Number(btn.dataset.id), // converting to Number because HTML only saves strings
+  //     );
+  //     task.setCompleted(); // class handles the logic here of setting the completion status
+  //     displayTasks(); // re-render my screen
+  //   });
+  // });
 
-  deletedButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      TaskManager.removeTask(btn.dataset.id);
-      displayTasks(); //re-render my screen
-    });
-  });
+  // deletedButtons.forEach((btn) => {
+  //   btn.addEventListener("click", () => {
+  //     TaskManager.removeTask(btn.dataset.id);
+  //     displayTasks(); //re-render my screen
+  //   });
+  // });
 }
 
 // Function with event handling issues
 function handleTaskClick(event) {
+  const taskId = event.target.dataset.id;
+
   // Missing: event.target check
+  if (event.target.classList.contains("completed-btn")) {
+    // First I find where the taskList item matches the current btn's ID then save to a variable
+    const task = TaskManager.tasks.find(
+      (task) => task.id === Number(taskId), // converting to Number because HTML only saves strings
+    );
+    task.setCompleted(); // class handles the logic here of setting the completion status
+    displayTasks(); //re-render my screen
+  }
+
+  if (event.target.classList.contains("deleted-btn")) {
+    TaskManager.removeTask(taskId);
+    displayTasks(); //re-render my screen
+  }
+
   // Missing: proper event delegation
 
-  var taskId = event.target.id; // Wrong way to get task ID
+  // var taskId = event.target.id; // Wrong way to get task ID
 
   // Should toggle task completion
   console.log("Task clicked: " + taskId);
 }
 
 // Missing: JSON conversion functions
+
 // Missing: functions to save/load tasks from localStorage
 
 // Initialize (wrong placement - should use DOMContentLoaded)
