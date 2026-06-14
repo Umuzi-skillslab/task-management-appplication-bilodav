@@ -181,6 +181,20 @@ export const TaskManager = {
     console.log(taskCounter);
   },
 
+  updateTaskPriority(taskId, newPriority) {
+    // Missing: typeof check for parameters
+    // Missing: null/undefined validation
+
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id === Number(taskId)) {
+        // Operator fixed (=== instead of =)
+        this.tasks[i].priority = newPriority;
+        return true;
+      }
+    }
+    return false;
+  },
+
   getTotalTasks() {
     return this.tasks.length;
   },

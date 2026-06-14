@@ -190,6 +190,11 @@ html {
   --border-medium: #dee2e6;
   --border-dark: #ced4da;
   --border-accent: #c9a961;
+  --border-completed: #61c974;
+  --border-low-priority: #2a323f;
+  --border-high-priority: #c96161;
+  --border-accent: #c9a961;
+  --border-accent: #c9a961;
   --border-primary: #1a2332;
 
   /* Shadow Colors */
@@ -198,6 +203,9 @@ html {
   --shadow-lg: 0 10px 25px rgba(26, 35, 50, 0.2);
   --shadow-xl: 0 20px 40px rgba(26, 35, 50, 0.25);
   --shadow-accent: 0 4px 12px rgba(201, 169, 97, 0.3);
+  --shadow-low-priority: 0 8px 20px rgba(26, 35, 50, 0.225);
+  --shadow-high-priority: 0 4px 12px rgba(123, 33, 17, 0.3);
+  --shadow-completed: 0 4px 12px rgba(33, 123, 17, 0.3);
   --shadow-inset:
     inset 4px 4px 8px rgba(26, 35, 50, 0.127), inset -4px -4px 8px #f6f4f4;
 
@@ -348,7 +356,8 @@ body {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
   border: 2px solid var(--btn-secondary-border);
-  padding: var(--spacing-sm) var(--spacing-lg);
+
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-weight: var(--font-weight-medium);
@@ -365,7 +374,7 @@ body {
   background-color: var(--btn-outline-bg);
   color: var(--btn-outline-text);
   border: 2px solid var(--btn-outline-border);
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-weight: var(--font-weight-medium);
@@ -376,6 +385,23 @@ body {
 .delete-btn:hover {
   background-color: var(--btn-outline-hover-bg);
   color: var(--btn-outline-hover-text);
+}
+
+.change-status-btn {
+  width: 48px;
+  height: 48px;
+  background-color: var(--btn-secondary-bg);
+  border-radius: var(--radius-sm);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  padding: 0px 5px 3px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.change-status-btn:hover {
+  background-color: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
 }
 
 .container {
@@ -489,9 +515,28 @@ select:focus {
 .task-card {
   padding: 10px;
   background-color: var(--bg-primary);
-  border: 1px solid var(--border-accent);
   border-radius: var(--radius-md);
+  position: relative;
+}
+
+.task-card-completed {
+  border: 1px solid var(--border-completed);
+  box-shadow: var(--shadow-completed);
+}
+
+.task-card-low {
+  border: 1px solid var(--border-low-priority);
+  box-shadow: var(--shadow-low-priority);
+}
+
+.task-card-medium {
+  border: 1px solid var(--border-accent);
   box-shadow: var(--shadow-accent);
+}
+
+.task-card-high {
+  border: 1px solid var(--border-high-priority);
+  box-shadow: var(--shadow-high-priority);
 }
 
 .task-card h3 {
@@ -519,6 +564,32 @@ select:focus {
 
 .task-card-status span {
   font-weight: var(--font-weight-semibold);
+}
+
+.task-card-modal-select {
+  width: auto;
+  position: absolute;
+  left: 85%;
+  top: 58%;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  z-index: 1000;
+}
+
+.task-card-modal-select li {
+  text-align: center;
+  padding: 3px;
+  border-bottom: 1px solid var(--bg-dark);
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+.task-card-modal-select li:hover {
+  color: var(--color-light);
+  background-color: var(--bg-dark);
+  cursor: pointer;
 }
 
 .statistics:not(:has(.stat-card)) {
@@ -563,4 +634,8 @@ select:focus {
 
 .green {
   color: green;
+}
+
+.hidden {
+  visibility: hidden;
 }

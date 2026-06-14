@@ -32,6 +32,25 @@ function setupEventListeners() {
   addButton.addEventListener("click", handleAddTask);
   taskListContainer.addEventListener("click", handleTaskClick);
 
+  // Close modals when clicking outside of the modal
+  // Add listener on document to listen for a click
+  document.addEventListener("click", (event) => {
+    const openModals = document.querySelectorAll(
+      ".task-card-modal-select:not(.hidden)",
+    );
+    if (openModals.length === 0) return; // no open modals, then exit the function
+
+    openModals.forEach((modal) => {
+      // check if user is not clicking the modal & the change status button
+      if (
+        !modal.contains(event.target) &&
+        !event.target.classList.contains("change-status-btn")
+      ) {
+        modal.classList.add("hidden");
+      }
+    });
+  });
+
   // Missing: other event listeners for form submission, etc. ************************************** DOES this form need to be here
 }
 
@@ -84,7 +103,7 @@ function displayTasks() {
     taskListContainer.insertAdjacentHTML(
       "beforeend",
       `
-      <div class="task-card">
+      <div class="task-card task-card-${taskList[i].completed ? "completed" : taskList[i].priority}">
         <div class="task-card-heading">
         <h3> ${taskList[i].title}</h3>
         <p>ID: ${taskList[i].id} </p>
@@ -92,7 +111,17 @@ function displayTasks() {
         <p> ${taskList[i].description}</p>
         <div class="task-card-status">
         <p class="${taskList[i].completed ? "green" : null}"> <span>Status:</span> ${taskList[i].completed ? "Done" : "Still Busy"}</p>
-        <p class="priority-${taskList[i].priority}"> <span>Priority:</span> ${formatTaskName(taskList[i].priority)}</p>
+        <p class="priority-${taskList[i].priority}"> 
+        <span>Priority:</span> ${formatTaskName(taskList[i].priority)} 
+        <span class="change-status-btn" title="Change Status">⌄</span>
+        </p>
+        <div class="task-card-modal-select hidden ">
+          <ol>
+          <li data-id=${taskList[i].id} data-value="low">Low</li>
+          <li data-id=${taskList[i].id} data-value="medium">Medium</li>
+          <li data-id=${taskList[i].id} data-value="high">High</li>
+          </ol>
+        </div>
         </div>
         <div>
         <button class="completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
@@ -126,6 +155,7 @@ function displayTasks() {
     `,
     );
   }
+
   // Missing: task ID, completion status, event handlers for delete/complete
 
   // const completedButtons = document.querySelectorAll(".completed-btn");
@@ -167,6 +197,19 @@ function handleTaskClick(event) {
   if (event.target.classList.contains("delete-btn")) {
     TaskManager.removeTask(taskId);
     displayTasks(); //re-render my screen
+  }
+
+  // Check to see if status button is clicked, and then toggle hidden class the next sibling on the parent element
+  if (event.target.classList.contains("change-status-btn")) {
+    event.target.parentElement.nextElementSibling.classList.toggle("hidden");
+  }
+
+  // Check if I am clicking the li element in my modal
+  if (event.target.tagName === "LI") {
+    console.log("clicked");
+    TaskManager.updateTaskPriority(taskId, event.target.dataset.value);
+    event.target.parentElement.classList.toggle("hidden");
+    displayTasks();
   }
 
   // Missing: proper event delegation
