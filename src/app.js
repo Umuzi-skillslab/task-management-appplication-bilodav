@@ -66,11 +66,11 @@ function findTaskByTitle() {
   // Wrong loop construct
   var i = 0;
   while (i < taskList.length) {
-    if (taskList[i].title == title) {
+    if (taskList[i].title === title) {
       // Fixed issue of using ==
       return taskList[i];
     }
-    // Missing: i++
+    i++;
   }
   return undefined;
 }
@@ -181,8 +181,18 @@ export const TaskManager = {
     console.log(taskCounter);
   },
 
-  getTotalTasks: function () {
+  getTotalTasks() {
     return this.tasks.length;
+  },
+
+  getTotalCompletedTasks() {
+    const completedList = this.tasks.filter((task) => task.completed === true);
+    return completedList.length;
+  },
+
+  getTotalIncompleteTasks() {
+    const completedList = this.tasks.filter((task) => task.completed === false);
+    return completedList.length;
   },
 };
 

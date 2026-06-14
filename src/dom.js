@@ -63,14 +63,16 @@ function handleAddTask() {
 
 // Function that should use better selectors
 function displayTasks() {
-  const container = document.getElementById("task-list");
+  const taskListContainer = document.getElementById("task-list");
+  const statisticsContainer = document.querySelector(".statistics");
 
   // Added null check
-  if (!container) return;
+  if (!taskListContainer || !statisticsContainer) return;
 
   // Clearing existing content first
 
-  container.innerHTML = ``;
+  taskListContainer.innerHTML = ``;
+  statisticsContainer.innerHTML = ``;
 
   // Inefficient - should use template literals and insertAdjacentHTML ***********MAybe Gonna use a foreach here?
   for (let i = 0; i < taskList.length; i++) {
@@ -79,21 +81,49 @@ function displayTasks() {
     // div.innerHTML = div.innerHTML + "<p>" + taskList[i].description + "</p>";
     // container.appendChild(div);
 
-    container.insertAdjacentHTML(
+    taskListContainer.insertAdjacentHTML(
       "beforeend",
       `
-      <div>
-        <p>ID: ${taskList[i].id} </p>
+      <div class="task-card">
+        <div class="task-card-heading">
         <h3> ${taskList[i].title}</h3>
+        <p>ID: ${taskList[i].id} </p>
+        </div>
         <p> ${taskList[i].description}</p>
-        <p> Priority: ${formatTaskName(taskList[i].priority)}</p>
-        <p> Status: ${taskList[i].completed ? "Done" : "Still Busy"}</p>
+        <div class="task-card-status">
+        <p class="${taskList[i].completed ? "green" : null}"> <span>Status:</span> ${taskList[i].completed ? "Done" : "Still Busy"}</p>
+        <p class="priority-${taskList[i].priority}"> <span>Priority:</span> ${formatTaskName(taskList[i].priority)}</p>
+        </div>
+        <div>
         <button class="completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
-        <button class="deleted-btn" data-id=${taskList[i].id}>Delete</button>
+        <button class="delete-btn" data-id=${taskList[i].id}>Delete</button>
+        </div>
 
 
       </div>
       `,
+    );
+  }
+
+  if (TaskManager.getTotalTasks() === 0) {
+    statisticsContainer.innerHTML = ``;
+  } else {
+    statisticsContainer.insertAdjacentHTML(
+      "beforeend",
+      `
+    <div class="stat-card">
+      <p>Total Tasks:</p>
+      <p>${TaskManager.getTotalTasks()}</p>
+    </div>
+    <div class="stat-card">
+      <p>Total Tasks Completed :</p>
+      <p>${TaskManager.getTotalCompletedTasks()}</p>
+    </div>
+    <div class="stat-card">
+      <p>Total Tasks Remaining :</p>
+      <p>${TaskManager.getTotalIncompleteTasks()}</p>
+    </div>
+    `,
     );
   }
   // Missing: task ID, completion status, event handlers for delete/complete
@@ -122,7 +152,7 @@ function displayTasks() {
 
 // Function with event handling issues
 function handleTaskClick(event) {
-  const taskId = event.target.dataset.id;
+  const taskId = event.target.dataset.id; // Getting the task id per button as set
 
   // Missing: event.target check
   if (event.target.classList.contains("completed-btn")) {
@@ -134,14 +164,12 @@ function handleTaskClick(event) {
     displayTasks(); //re-render my screen
   }
 
-  if (event.target.classList.contains("deleted-btn")) {
+  if (event.target.classList.contains("delete-btn")) {
     TaskManager.removeTask(taskId);
     displayTasks(); //re-render my screen
   }
 
   // Missing: proper event delegation
-
-  // var taskId = event.target.id; // Wrong way to get task ID
 
   // Should toggle task completion
   console.log("Task clicked: " + taskId);
