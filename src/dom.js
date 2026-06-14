@@ -124,7 +124,7 @@ function displayTasks() {
         </div>
         </div>
         <div>
-        <button class="completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
+        <button class="${taskList[i].completed ? "active" : "non"}-completed-btn completed-btn" data-id=${taskList[i].id}>${taskList[i].completed ? "Mark as not done" : "Mark as Done"}</button> 
         <button class="delete-btn" data-id=${taskList[i].id}>Delete</button>
         </div>
 

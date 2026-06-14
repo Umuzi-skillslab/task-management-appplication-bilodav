@@ -353,10 +353,7 @@ body {
 } */
 
 .completed-btn {
-  background-color: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
   border: 2px solid var(--btn-secondary-border);
-
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
@@ -365,9 +362,32 @@ body {
   transition: all var(--transition-base);
 }
 
-.completed-btn:hover {
+.non-completed-btn {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  transition: all var(--transition-base);
+}
+
+.non-completed-btn:hover {
   background-color: var(--btn-secondary-hover-bg);
   color: var(--btn-secondary-hover-text);
+}
+
+.active-completed-btn {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+}
+
+.active-completed-btn:hover {
+  background-color: var(--btn-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.active-completed-btn:active {
+  background-color: var(--btn-primary-active);
+  transform: translateY(2px) scale(0.98);
 }
 
 .delete-btn {
