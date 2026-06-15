@@ -75,20 +75,21 @@ function findTaskByTitle() {
   return undefined;
 }
 
-// Function with type checking issues
-function updateTaskPriority(taskId, newPriority) {
-  // Missing: typeof check for parameters
-  // Missing: null/undefined validation
+// +++++++++++++++ ADDED THIS FUNCTION TO THE TASK MANAGER +++++++++++++++++++++++
+// // Function with type checking issues
+// function updateTaskPriority(taskId, newPriority) {
+//   // Missing: typeof check for parameters
+//   // Missing: null/undefined validation
 
-  for (var i = 0; i < taskList.length; i++) {
-    if ((taskList[i].id = taskId)) {
-      // Wrong operator (= instead of ===)
-      taskList[i].priority = newPriority;
-      return true;
-    }
-  }
-  return false;
-}
+//   for (var i = 0; i < taskList.length; i++) {
+//     if ((taskList[i].id = taskId)) {
+//       // Wrong operator (= instead of ===)
+//       taskList[i].priority = newPriority;
+//       return true;
+//     }
+//   }
+//   return false;
+// }
 
 // Function that should use destructuring but doesn't
 function getTaskDetails(task) {
@@ -120,9 +121,10 @@ function mergeTasks(list1, list2) {
 }
 
 // Recursive function with error
-function countCompletedTasks(tasks, index) {
-  // Missing: base case check
+export function countCompletedTasks(tasks, index) {
+  // Added base case check
   // Missing: null/undefined check
+  if (index === tasks.length) return 0;
 
   if (tasks[index].completed) {
     return 1 + countCompletedTasks(tasks, index + 1);
@@ -202,6 +204,18 @@ export const TaskManager = {
   getTotalCompletedTasks() {
     const completedList = this.tasks.filter((task) => task.completed === true);
     return completedList.length;
+  },
+  //Added count COmpleted tasks here in the taskManager too, waiting on clarification I think its better here, ensuring it can call itself
+  countCompletedTasks(index = 0) {
+    // Added base case check
+    // Missing: null/undefined check
+    if (index === this.tasks.length) return 0;
+
+    if (this.tasks[index].completed) {
+      return 1 + this.countCompletedTasks(index + 1);
+    } else {
+      return this.countCompletedTasks(index + 1);
+    }
   },
 
   getTotalIncompleteTasks() {

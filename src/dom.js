@@ -1,4 +1,4 @@
-import { taskList, TaskManager } from "./app.js";
+import { taskList, TaskManager, countCompletedTasks } from "./app.js";
 
 // DOM Manipulation - Starter Code with Errors
 
@@ -146,12 +146,36 @@ function displayTasks() {
     </div>
     <div class="stat-card">
       <p>Total Tasks Completed :</p>
-      <p>${TaskManager.getTotalCompletedTasks()}</p>
+      <p>${countCompletedTasks(taskList, 0)}</p>
     </div>
     <div class="stat-card">
       <p>Total Tasks Remaining :</p>
       <p>${TaskManager.getTotalIncompleteTasks()}</p>
     </div>
+    <div class="filter-task-section">
+      <fieldset>
+      <label>Sort By:</label>
+        <select id="sort-by">
+          <option default value="order-added">Order Added</option>
+          <option value="high-priority">Highest Priority</option>
+          <option value="medium-priority">Medium Priority</option>
+          <option value="low-priority">Lowest Priority</option>
+          <option value="done">Completed Tasks</option>
+          <option value="not-done">Uncompleted Tasks</option>
+        </select>
+      </fieldset>   
+      <fieldset>
+        <label>Filter By: </label>
+        <select id="fillter-by">
+          <option default value="all">All</option>
+          <option value="high-priority">Highest Priority</option>
+          <option value="medium-priority">Medium Priority</option>
+          <option value="low-priority">Lowest Priority</option>
+          <option value="done">Completed Tasks</option>
+          <option value="not-done">Uncompleted Tasks</option>
+        </select>
+      </fieldset>
+      </div>
     `,
     );
   }
