@@ -1,11 +1,13 @@
 // Task Management Application - Starter Code with Errors
 
+import { generateRandomId, loadFromStorage, saveToStorage } from "./utils.js";
+
 // Global variables
 export const taskList = []; // Added const as it will always be an array
 let taskCounter = 0; // Used let
 
 // Task class with errors
-class Task {
+export class Task {
   constructor(title, description, priority) {
     this.title = title;
     this.description = description;
@@ -22,6 +24,7 @@ class Task {
   // Added method to toggle completion
   setCompleted() {
     this.completed = !this.completed;
+    saveToStorage(taskList);
   }
 }
 
@@ -90,6 +93,17 @@ function findTaskByTitle() {
 //   }
 //   return false;
 // }
+
+// This is used in dom.js on load to restore saved tasks
+export function loadTasks() {
+  const savedTasks = loadFromStorage();
+  savedTasks.forEach((item) => {
+    const task = new Task(item.title, item.description, item.priority); // convert back to task instances from the plain JS objects
+    task.id = item.id; // set ID to old ID as opposed to generating a new one
+    task.completed = item.completed;
+    taskList.push(task);
+  });
+}
 
 // Function that should use destructuring but doesn't
 function getTaskDetails(task) {
@@ -167,6 +181,7 @@ export const TaskManager = {
     const newTask = new Task(title, description, priority); // changed to const
     this.tasks.push(newTask);
     taskCounter++;
+    saveToStorage(this.tasks);
     console.log(taskCounter);
 
     return newTask;
@@ -180,6 +195,7 @@ export const TaskManager = {
     // Delete the index from the array using the splice method to mutate the original array
     this.tasks.splice(taskIndex, 1);
     taskCounter--;
+    saveToStorage(this.tasks);
     console.log(taskCounter);
   },
 
@@ -191,6 +207,7 @@ export const TaskManager = {
       if (this.tasks[i].id === Number(taskId)) {
         // Operator fixed (=== instead of =)
         this.tasks[i].priority = newPriority;
+        saveToStorage(this.tasks);
         return true;
       }
     }
