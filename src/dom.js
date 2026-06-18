@@ -1,11 +1,17 @@
-import { taskList, TaskManager, countCompletedTasks } from "./app.js";
+import {
+  taskList,
+  TaskManager,
+  countCompletedTasks,
+  loadTasks,
+} from "./app.js";
 import { formatTaskName, priorities } from "./utils.js";
 // DOM Manipulation - Starter Code with Errors
 
 // Added the proper DOM selectors
 function setupEventListeners() {
   console.log("LOADED THE DOM");
-
+  loadTasks();
+  displayTasks();
   // Corrected selector method
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
   const taskInput = document.querySelector("#task-input"); // Added # ************************* DOES NOT EXIT IN DOM
