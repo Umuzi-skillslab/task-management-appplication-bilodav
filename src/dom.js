@@ -26,7 +26,8 @@ function setupEventListeners() {
   }
 
   // Adding the options dynamically using the single source of truth [priorities] located in utilis.js
-  priorities.forEach((priority) => {
+
+  Object.keys(priorities).forEach((priority) => {
     prioritySelect.insertAdjacentHTML(
       "beforeend",
       `
@@ -181,9 +182,8 @@ function displayTasks() {
       <label>Sort By:</label>
         <select id="sort-by">
           <option value="order-added">Order Added</option>
-          <option value="high">Highest Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="low">Lowest Priority</option>
+          <option value="high">Highest Priority First</option>
+          <option value="low">Lowest Priority First</option>
           <option value="done">Completed Tasks</option>
           <option value="not-done">Uncompleted Tasks</option>
         </select>

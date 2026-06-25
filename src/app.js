@@ -1,6 +1,11 @@
 // Task Management Application - Starter Code with Errors
 
-import { generateRandomId, loadFromStorage, saveToStorage } from "./utils.js";
+import {
+  generateRandomId,
+  loadFromStorage,
+  saveToStorage,
+  priorities,
+} from "./utils.js";
 
 // Global variables
 export const taskList = []; // Added const as it will always be an array
@@ -261,9 +266,40 @@ export const TaskManager = {
     return [...this.tasks]; //fallback incase some other filter slips through
   },
 
+  sortTasks(tasks, sortBy) {
+    // Make a copy first because sort mutates the original array
+    const sorted = [...tasks];
+
+    if (!sortBy || sortBy === "order-added") {
+      return sorted; // List already in order added
+    }
+
+    if (sortBy === "done") {
+      return sorted.sort((a, b) => b.completed - a.completed);
+    }
+
+    if (sortBy === "not-done") {
+      return sorted.sort((a, b) => a.completed - b.completed);
+    }
+
+    if (sortBy === "high") {
+      return sorted.sort(
+        (a, b) => priorities[b.priority] - priorities[a.priority],
+      );
+    }
+
+    if (sortBy === "low") {
+      return sorted.sort(
+        (a, b) => priorities[a.priority] - priorities[b.priority],
+      );
+    }
+
+    return sorted;
+  },
+
   getDisplayTasks(filterBy, sortBy) {
     const filtered = this.getFilteredTasks(filterBy);
-    return filtered;
+    return this.sortTasks(filtered, sortBy);
   },
 };
 
