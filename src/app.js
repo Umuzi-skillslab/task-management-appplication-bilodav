@@ -35,10 +35,13 @@ export class Task {
 
 // Subtask class with fixed inheritance issues
 export class SubTask extends Task {
-  constructor(title, description, priority, parentTask) {
+  constructor(title, description, priority, parentId) {
     // Added super() call
     super(title, description, priority);
-    this.parentTask = parentTask;
+    this.parentId = parentId;
+  }
+  getInfo() {
+    return `Subtask: ${this.title} (parent ID: ${this.parentId}) - Priority: ${this.priority}`;
   }
 }
 
@@ -103,10 +106,26 @@ function findTaskByTitle() {
 export function loadTasks() {
   const savedTasks = loadFromStorage();
   savedTasks.forEach((item) => {
-    const task = new Task(item.title, item.description, item.priority); // convert back to task instances from the plain JS objects
-    task.id = item.id; // set ID to old ID as opposed to generating a new one
-    task.completed = item.completed;
-    taskList.push(task);
+    // const task = new Task(item.title, item.description, item.priority); // convert back to task instances from the plain JS objects
+    try {
+      let task;
+      // check if the task has a parent id property to determine if it is a subtask
+      if (item.parentId !== undefined && item.parentId !== null) {
+        task = new SubTask(
+          item.title,
+          item.description,
+          item.priority,
+          item.parentId,
+        );
+      } else {
+        task = new Task(item.title, item.description, item.priority);
+      }
+      task.id = item.id; // set ID to old ID as opposed to generating a new one
+      task.completed = item.completed;
+      taskList.push(task);
+    } catch (error) {
+      console.error("Skipped a corruted saved task:", error.message);
+    }
   });
 }
 
@@ -183,13 +202,27 @@ export const TaskManager = {
   // Missing: method using array methods (map, filter, reduce)
 
   addTask(title, description, priority) {
-    const newTask = new Task(title, description, priority); // changed to const
-    this.tasks.push(newTask);
-    taskCounter++;
-    saveToStorage(this.tasks);
-    console.log(taskCounter);
-
-    return newTask;
+    try {
+      if (typeof title !== "string" || title.trim() === "") {
+        throw new Error("Task title is required and must be text");
+      }
+      if (typeof description !== "string") {
+        throw new Error("Task description must be text");
+      }
+      if (!priorities[priority]) {
+        throw new Error(
+          `The ${priority} is invalid, It must be either low, medium or high`,
+        );
+      }
+      const newTask = new Task(title, description, priority); // changed to const
+      this.tasks.push(newTask);
+      taskCounter++;
+      saveToStorage(this.tasks);
+      console.log(taskCounter);
+      return newTask;
+    } catch (error) {
+      console.error("Could not add task:", error.message);
+    }
   },
 
   removeTask(taskId) {
@@ -300,6 +333,24 @@ export const TaskManager = {
   getDisplayTasks(filterBy, sortBy) {
     const filtered = this.getFilteredTasks(filterBy);
     return this.sortTasks(filtered, sortBy);
+  },
+
+  addSubTask(title, description, priority, parentId) {
+    const parentTask = this.tasks.find((task) => task.id === Number(parentId));
+    if (!parentId) {
+      console.log("Parent task not found");
+      return null;
+    }
+
+    const newSubTask = new SubTask(
+      title,
+      description,
+      priority,
+      Number(parentId),
+    );
+    this.tasks.push(newSubTask);
+    saveToStorage(this.tasks);
+    return newSubTask;
   },
 };
 
