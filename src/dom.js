@@ -14,7 +14,6 @@ function setupEventListeners() {
   displayTasks();
   // Corrected selector method
   const addButton = document.querySelector(".add-task-btn"); // Changed to querySelector
-  const taskInput = document.querySelector("#task-input"); // Added # ************************* DOES NOT EXIT IN DOM
   const prioritySelect = document.getElementById("priority");
   const taskListContainer = document.getElementById("task-list");
 
@@ -59,6 +58,13 @@ function setupEventListeners() {
   });
 
   document.addEventListener("change", (event) => {
+    if (event.target.id === "search-by-title") {
+      currentSearch = event.target.value;
+      displayTasks();
+    }
+  });
+
+  document.addEventListener("change", (event) => {
     if (event.target.id === "filter-by") {
       currentFilter = event.target.value;
       displayTasks();
@@ -95,6 +101,7 @@ function handleAddTask(e) {
 
 let currentFilter = "all";
 let currentSort = "order-added";
+let currentSearch = "";
 
 function displayTasks() {
   const taskListContainer = document.getElementById("task-list");
@@ -109,10 +116,18 @@ function displayTasks() {
   statisticsContainer.innerHTML = ``;
 
   // Filtering the main list to ensure only top level is rendering or else subtasks ends up being rendered too
-  const tasksToRender = TaskManager.getDisplayTasks(
-    currentFilter,
-    currentSort,
-  ).filter((task) => !task.parentId);
+  let tasksToRender;
+
+  if (currentSearch) {
+    tasksToRender = TaskManager.getSearchTask(currentSearch).filter(
+      (task) => !task.parentId,
+    );
+  } else {
+    tasksToRender = TaskManager.getDisplayTasks(
+      currentFilter,
+      currentSort,
+    ).filter((task) => !task.parentId);
+  }
 
   // using a for of loop
   for (const task of tasksToRender) {
@@ -213,11 +228,17 @@ function displayTasks() {
     </div>
     <div class="stat-card">
       <p>Average Task Priority:</p>
-      <p>${calculateAveragePriority(taskList)}</p>
+      <p>${calculateAveragePriority(taskList.filter((task) => !task.parentId && !task.completed))}</p>
     </div>
     <div class="filter-task-section">
       <fieldset>
-      <label>Sort By:</label>
+        <label>Search by Main Task Title:</label>
+        <form>
+        <input id="search-by-title" placeholder="Search here" />
+        </form>
+      </fieldset> 
+      <fieldset>
+        <label>Sort By:</label>
         <select id="sort-by">
           <option value="order-added">Order Added</option>
           <option value="high">Highest Priority First</option>

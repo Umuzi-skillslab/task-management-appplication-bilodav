@@ -198,7 +198,7 @@ describe("TaskManager counting methods", () => {
   test("getTotalTasks should show the number of tasks added", () => {
     TaskManager.addTask("Task 1", "Description 1", "low");
     TaskManager.addTask("B", "d", "medium");
-    expect(TaskManager.getTotalTasks().toBe(2));
+    expect(TaskManager.getTotalTasks()).toBe(2);
   });
 
   //Edge case: base case of the recursion with zero tasks
@@ -226,3 +226,81 @@ describe("TaskManager counting methods", () => {
 // -------------------------------
 // Filtering and sorting methods
 // -------------------------------
+
+describe("TaskManager.getFilteredTasks", () => {
+  test("The 'all' filter should return every task in the array", () => {
+    TaskManager.addTask("Title A", "Description A", "low");
+    TaskManager.addTask("Title B", "Description B", "medium");
+    expect(TaskManager.getFilteredTasks("all")).toHaveLength(2);
+  });
+
+  test("The 'done' filter should return all completed tasks", () => {
+    const taskA = TaskManager.addTask("Title A", "Description A", "low");
+    TaskManager.addTask("Title B", "Description B", "medium");
+    taskA.toggleCompletion();
+    const done = TaskManager.getFilteredTasks("done");
+    expect(done).toHaveLength(1);
+    expect(done[0].title).toBe("Title A");
+  });
+
+  test("The priority filter should only return the tasks matching the priority", () => {
+    TaskManager.addTask("Title A", "Description A", "low");
+    TaskManager.addTask("Title B", "Description B", "high");
+    TaskManager.addTask("Title C", "Description C", "high");
+
+    const highOnly = TaskManager.getFilteredTasks("high");
+    expect(highOnly).toHaveLength(2);
+    expect(highOnly[0].title).toBe("Title B");
+  });
+});
+
+describe("TaskManager.sortTasks", () => {
+  test("The 'high' sort option should order tasks from high to low", () => {
+    const all = [
+      new Task("Low Task", "description", "low"),
+      new Task("High Task", "description", "high"),
+      new Task("Medium Task", "description", "medium"),
+    ];
+    const sorted = TaskManager.sortTasks(all, "high");
+    expect(sorted.map((test) => test.priority)).toEqual([
+      "high",
+      "medium",
+      "low",
+    ]);
+  });
+
+  test("The sortTasks method should not mutate the original array", () => {
+    const all = [
+      new Task("Low Task", "description", "low"),
+      new Task("High Task", "description", "high"),
+    ];
+    const originalOrder = all.map((task) => task.title);
+    TaskManager.sortTasks(all, "high");
+    expect(all.map((task) => task.title)).toEqual(originalOrder);
+  });
+});
+
+// -------------------------------
+// calculateAveragePriority
+// -------------------------------
+
+describe("calculateAveragePriority", () => {
+  // Test for the edge case against an empty array on non array input
+  test("Should return 0 for an emty array", () => {
+    expect(calculateAveragePriority([])).toBe(0);
+  });
+
+  test("Should return 0 when given a non-array value", () => {
+    expect(calculateAveragePriority(null)).toBe(0);
+    expect(calculateAveragePriority(undefined)).toBe(0);
+  });
+
+  test("Should calcualte the average priority weight of a task list", () => {
+    const tasks = [
+      new Task("Low Task", "description", "low"),
+      new Task("High Task", "description", "high"),
+    ];
+
+    expect(calculateAveragePriority(tasks)).toBe("2.00");
+  });
+});
