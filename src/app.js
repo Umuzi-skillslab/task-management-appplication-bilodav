@@ -53,76 +53,29 @@ export function displayAllTasks() {
   }
 }
 
-// Function missing parameter
-function findTaskByTitle() {
-  // Missing: title parameter
-  // Wrong loop construct
-  var i = 0;
-  while (i < taskList.length) {
-    if (taskList[i].title === title) {
-      // Fixed issue of using ==
-      return taskList[i];
-    }
-    i++;
-  }
-  return undefined;
-}
-
 // This is used in dom.js on load to restore saved tasks
 export function loadTasks() {
   const savedTasks = loadFromStorage();
-  savedTasks.forEach((item) => {
-    // const task = new Task(item.title, item.description, item.priority); // convert back to task instances from the plain JS objects
-    try {
-      let task;
-      // check if the task has a parent id property to determine if it is a subtask
-      if (item.parentId !== undefined && item.parentId !== null) {
-        task = new Subtask(
-          item.title,
-          item.description,
-          item.priority,
-          item.parentId,
-        );
-      } else {
-        task = new Task(item.title, item.description, item.priority);
+  // destructure for ease of use
+  savedTasks.forEach(
+    ({ title, description, priority, completed, id, parentId }) => {
+      try {
+        let task;
+        // check if the task has a parent id property to determine if it is a subtask
+        if (parentId !== undefined && parentId !== null) {
+          task = new Subtask(title, description, priority, parentId);
+        } else {
+          task = new Task(title, description, priority);
+        }
+        task.id = id; // set ID to old ID as opposed to generating a new one
+        task.completed = completed;
+        taskList.push(task);
+      } catch (error) {
+        console.error("Skipped a corruted saved task:", error.message);
       }
-      task.id = item.id; // set ID to old ID as opposed to generating a new one
-      task.completed = item.completed;
-      taskList.push(task);
-    } catch (error) {
-      console.error("Skipped a corruted saved task:", error.message);
-    }
-  });
+    },
+  );
 }
-
-// // Function that should use destructuring but doesn't
-// function getTaskDetails(task) {
-//   // Should destructure task properties
-//   var title = task.title;
-//   var description = task.description;
-//   var priority = task.priority;
-//   var completed = task.completed;
-
-//   return {
-//     title: title,
-//     description: description,
-//     priority: priority,
-//     completed: completed,
-//   };
-// }
-
-// // Function missing spread/rest operators
-// function mergeTasks(list1, list2) {
-//   // Should use spread operator
-//   var merged = [];
-//   for (var i = 0; i < list1.length; i++) {
-//     merged.push(list1[i]);
-//   }
-//   for (var i = 0; i < list2.length; i++) {
-//     merged.push(list2[i]);
-//   }
-//   return merged;
-// }
 
 export function calculateAveragePriority(tasks) {
   //Ensure that tasks is actually an array and that it is greater than 0
@@ -131,7 +84,12 @@ export function calculateAveragePriority(tasks) {
   return Number(total / tasks.length).toFixed(2);
 }
 
-// Object with missing methods
+function createPriorityFilter() {
+  return (task) => {
+    task.priority === priority;
+  };
+}
+
 export const TaskManager = {
   tasks: taskList,
 
@@ -157,6 +115,12 @@ export const TaskManager = {
     } catch (error) {
       console.error("Could not add task:", error.message);
     }
+  },
+
+  addMultipleTasks(...tasksData) {
+    return tasksData.map(([title, description, priority]) =>
+      this.addTask(title, description, priority),
+    );
   },
 
   removeTask(taskId) {
@@ -248,10 +212,19 @@ export const TaskManager = {
     }
 
     if (filterby === "low" || filterby === "medium" || filterby === "high") {
-      return this.tasks.filter((task) => task.priority === filterby);
+      return this.tasks.filter(createPriorityFilter(filterby));
     }
 
     return [...this.tasks]; //fallback incase some other filter slips through
+  },
+
+  getHighestPriorityTask() {
+    if (this.tasks.length === 0) return null;
+    const sorted = this.sortTasks(this.tasks, "high").filter(
+      (task) => !task.parentId && !task.completed,
+    );
+    const [topTask] = sorted;
+    return topTask;
   },
 
   sortTasks(tasks, sortBy) {

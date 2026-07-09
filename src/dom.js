@@ -208,12 +208,22 @@ function displayTasks() {
     );
   }
 
+  const topTask = TaskManager.getHighestPriorityTask();
+
   if (TaskManager.getTotalTasks() === 0) {
     statisticsContainer.innerHTML = ``;
   } else {
     statisticsContainer.insertAdjacentHTML(
       "beforeend",
       `
+    ${
+      topTask
+        ? `<div class="stat-card">
+                    <p>Next Highest Priority:</p>
+                    <p>${topTask.title}</p>
+                  </div>`
+        : ""
+    }
     <div class="stat-card">
       <p>Total Tasks:</p>
       <p>${TaskManager.getTotalTasks()}</p>
