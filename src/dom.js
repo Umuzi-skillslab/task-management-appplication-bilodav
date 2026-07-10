@@ -57,7 +57,7 @@ function setupEventListeners() {
     });
   });
 
-  document.addEventListener("change", (event) => {
+  document.addEventListener("input", (event) => {
     if (event.target.id === "search-by-title") {
       currentSearch = event.target.value;
       displayTasks();
@@ -104,11 +104,20 @@ let currentSort = "order-added";
 let currentSearch = "";
 
 function displayTasks() {
+  const filterListContainer = document.querySelector(".filter-task-section");
   const taskListContainer = document.getElementById("task-list");
   const statisticsContainer = document.querySelector(".statistics");
 
   // Added null check
-  if (!taskListContainer || !statisticsContainer) return;
+  if (!taskListContainer || !statisticsContainer || !filterListContainer)
+    return;
+
+  //Check if there are any tasks , and if so display the filter section
+  if (TaskManager.tasks.length) {
+    filterListContainer.classList.remove("hidden");
+  } else {
+    filterListContainer.classList.add("hidden");
+  }
 
   // Clearing existing content first
 
@@ -240,35 +249,6 @@ function displayTasks() {
       <p>Average Task Priority:</p>
       <p>${calculateAveragePriority(taskList.filter((task) => !task.parentId && !task.completed))}</p>
     </div>
-    <div class="filter-task-section">
-      <fieldset>
-        <label>Search by Main Task Title:</label>
-        <form>
-        <input id="search-by-title" placeholder="Search here" />
-        </form>
-      </fieldset> 
-      <fieldset>
-        <label>Sort By:</label>
-        <select id="sort-by">
-          <option value="order-added">Order Added</option>
-          <option value="high">Highest Priority First</option>
-          <option value="low">Lowest Priority First</option>
-          <option value="done">Completed Tasks</option>
-          <option value="not-done">Uncompleted Tasks</option>
-        </select>
-      </fieldset>   
-      <fieldset>
-        <label>Filter By: </label>
-        <select id="filter-by">
-          <option value="all">All</option>
-          <option value="high">Highest Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="low">Lowest Priority</option>
-          <option value="done">Completed Tasks</option>
-          <option value="not-done">Uncompleted Tasks</option>
-        </select>
-      </fieldset>
-      </div>
     `,
     );
     // After The DOM Rebuilds I keep losing the current state of my select buttons. In order to fix it I am restoring the values

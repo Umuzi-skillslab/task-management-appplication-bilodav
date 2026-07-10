@@ -84,10 +84,8 @@ export function calculateAveragePriority(tasks) {
   return Number(total / tasks.length).toFixed(2);
 }
 
-function createPriorityFilter() {
-  return (task) => {
-    task.priority === priority;
-  };
+function createPriorityFilter(priority) {
+  return (task) => task.priority === priority;
 }
 
 export const TaskManager = {

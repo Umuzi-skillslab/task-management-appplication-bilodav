@@ -131,6 +131,21 @@ describe("TaskManager.addTask", () => {
 });
 
 // -------------------------------
+// TaskManager.addMultipleTasks
+// -------------------------------
+describe("TaskManager.addMultipleTasks", () => {
+  test("Calling addMultipleTasks should add several tasks at once", () => {
+    const results = TaskManager.addMultipleTasks(
+      ["Task A", "description", "low"],
+      ["Task B", "description", "medium"],
+    );
+
+    expect(TaskManager.tasks).toHaveLength(2);
+    expect(results.map((task) => task.title)).toEqual(["Task A", "Task B"]);
+  });
+});
+
+// -------------------------------
 // TaskManager.removeTask
 // -------------------------------
 
@@ -277,6 +292,22 @@ describe("TaskManager.sortTasks", () => {
     const originalOrder = all.map((task) => task.title);
     TaskManager.sortTasks(all, "high");
     expect(all.map((task) => task.title)).toEqual(originalOrder);
+  });
+});
+
+// -------------------------------
+// taskManager.getHighestPriorityTask
+// -------------------------------
+
+describe("TaskManager.getHighestPriorityTask", () => {
+  test("When the list is empty getHighestPriorityTask should return null", () => {
+    expect(TaskManager.getHighestPriorityTask()).toBeNull();
+  });
+
+  test("getHighestPriorityTask should return the highest priority task", () => {
+    TaskManager.addTask("Low Task", "description", "low");
+    const high = TaskManager.addTask("High Task", "descritpion", "high");
+    expect(TaskManager.getHighestPriorityTask().id).toBe(high.id);
   });
 });
 
