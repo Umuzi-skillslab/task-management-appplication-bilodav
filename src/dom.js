@@ -19,8 +19,8 @@ function setupEventListeners() {
 
   // Added null checks before adding listeners
 
-  if (!addButton || !prioritySelect) {
-    console.log("missing button");
+  if (!addButton || !prioritySelect || !taskListContainer) {
+    console.log("missing elements");
     return;
   }
 

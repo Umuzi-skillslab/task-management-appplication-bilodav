@@ -45,7 +45,7 @@ export class Subtask extends Task {
   }
 }
 
-// Used correct Loop *** can this be something more useful that printing the title to the console?
+// Used correct Loop
 export function displayAllTasks() {
   // Used for..of loop and of by one error automatically gone
   for (let task of taskList) {
@@ -141,17 +141,16 @@ export const TaskManager = {
   },
 
   updateTaskPriority(taskId, newPriority) {
-    // Missing: typeof check for parameters
-    // Missing: null/undefined validation
+    // Added typeof check for parameters
+    // Added null/undefined validation
 
     if (typeof newPriority !== "string" || !priorities[newPriority]) {
       console.error("Invalid property value");
       return false;
     }
-    for (let i = 0; i < this.tasks.length; i++) {
-      if (this.tasks[i].id === Number(taskId)) {
-        // Operator fixed (=== instead of =)
-        this.tasks[i].priority = newPriority;
+    for (let task of this.tasks) {
+      if (task.id === Number(taskId)) {
+        task.priority = newPriority;
         saveToStorage(this.tasks);
         return true;
       }
@@ -167,10 +166,8 @@ export const TaskManager = {
     const completedList = this.tasks.filter((task) => task.completed === true);
     return completedList.length;
   },
-  //Added count COmpleted tasks here in the taskManager too, waiting on clarification I think its better here, ensuring it can call itself
   countCompletedTasks(index = 0) {
     // Added base case check
-    // Missing: null/undefined check
     if (index === this.tasks.length) return 0;
 
     if (this.tasks[index].completed) {
