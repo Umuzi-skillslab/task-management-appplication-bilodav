@@ -2,6 +2,8 @@
 
 This project is a Task Management App that is built using vanilla JavaScript, to demonstrate my understanding of ES6+ fundamentals such as, classes and inheritance, functional array methods, destructuring/spread/rest, DOM manipulation with event delegation, localStorage persistance, and Jest testing.
 
+You can visit the Live URL here: https://bilodav.github.io/umuzi-task-manager
+
 ## Overview
 
 In my application, Users can add tasks with a title, description and priority that can be altered after initialisation and also toggle completion. Under each task they can add a subtask that can be deleted or toggle completion. Filters like Sort, Search and Filter manages the task list according to what the user eants to see. The app also features live stats like total tasks, total completed tasks, average priority and more. All state is persisted to `localStorage` and reloaded on page load. The app is plit into three ES6 modules namely, `utilis.js`, `app.js` and `dom.js` plus a Jest test suite that covers the app's core logic.
@@ -62,7 +64,7 @@ The test coverage includes: `Task` creation and methods, `Subtask` inheritance, 
 
 - `app-running.png` — application running in the browser
 - `console-no-errors.png` — browser console with no errors
-- `tests-passing.png` — `npm test` output showing 25/25 passing
+- `tests-passing.png` — `npm test` output showing 31/31 passing
 - `dom-features.png` — filtering/sorting/subtasks working live
 
 ### Application running in the browser
@@ -107,4 +109,6 @@ The test coverage includes: `Task` creation and methods, `Subtask` inheritance, 
 
 ## Reflection
 
-The trickiest bug was the recursive `countCompletedTasks` function — without a base case it would recurse past the end of the array and throw, so tracing the stack to find where `this.tasks[index]` became `undefined` was the key debugging step. The second challenge was untangling `TaskManager.tasks` as an alias for the exported `taskList` array: mutating one had to reliably mutate the other, which shaped how `removeTask` and the Jest `beforeEach` reset (`taskList.splice(0, taskList.length)`) were written.
+## Reflection
+
+This project taught me a new way of structuring my code by separating concerns across different JavaScript files instead of cramming everything into one. Using object-oriented programming for the first time was challenging, but it showed me how useful classes and inheritance are for modelling real entities like tasks and subtasks. Writing the Jest test suite was its own learning curve, it taught me the value of having a safety net, writing tests against my implementation gave me the confidence to refactor (like moving from index-based loops to for...of, or replacing manual filtering with array methods) without worrying I'd quietly broken something along the way.
