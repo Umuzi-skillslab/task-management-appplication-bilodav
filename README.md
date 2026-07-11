@@ -37,7 +37,7 @@ In my application, Users can add tasks with a title, description and priority th
 
 - ES6 classes with inheritance (`Task` → `Subtask`)
 - Functional array methods: `map`, `filter`, `reduce`, `find`
-- A custom higher-order function (`withValidation`) and pure functions (`calculateAveragePriority`, `formatTaskName`, `isHighPriority`)
+- A custom higher-order function (`createPriorityFilter`) and pure functions (`calculateAveragePriority`)
 - Recursive completed-task counter with the correct base case
 - Destructuring (object, array, and function-parameter forms), spread, and rest operators
 - Event delegation for all task-card interactions (complete, delete, change priority, add subtask)
